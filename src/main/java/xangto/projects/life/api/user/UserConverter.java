@@ -14,4 +14,12 @@ public interface UserConverter {
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     UserEntity registerUser(RegisterDTO user);
+
+    // Entity -> VO
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "updateTime", ignore = true)
+    @Mapping(target = "createTime", ignore = true)
+    UserVO toVO(UserEntity user);
 }

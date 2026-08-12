@@ -3,10 +3,14 @@ package xangto.projects.life.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -41,40 +45,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) {
         http
-            // 关闭 CSRF：JWT 在请求头中传递，基于 Token 的无状态认证不需要 CSRF 防护
-            .csrf(AbstractHttpConfigurer::disable)
-            // 关闭表单登录与 HTTP Basic 登录：统一走自定义登录接口（/api/auth/login）签发 JWT
-            .formLogin(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            // 关闭默认登出：无状态认证由前端丢弃 Token 即可，无需服务端登出接口
-            .logout(AbstractHttpConfigurer::disable)
-            // 无状态会话策略：禁止创建 Session，避免引入额外状态
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // 请求授权规则
-            .authorizeHttpRequests(auth -> auth
-                // 认证白名单：登录、注册接口无需 Token 即可访问（路径按实际 Controller 调整）
-                .requestMatchers("/api/user/login", "/api/user/register").permitAll()
-                // 文档白名单：Knife4j 页面（/doc.html）、其静态资源、OpenAPI 描述接口、图标与错误页
-                .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico", "/error").permitAll()
-                // 其余请求必须认证
-                .anyRequest().authenticated()
-            )
-            // 认证异常处理：返回 JSON 而非默认 HTML，保持 REST 接口风格
-            .exceptionHandling(handling -> handling
-                // 未认证（401）：Token 缺失、过期或非法
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json;charset=UTF-8");
-                    response.getWriter().write("{\"code\":401,\"message\":\"未登录或登录已过期\",\"data\": null}");
-                })
-                // 已认证但权限不足（403）
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.setContentType("application/json;charset=UTF-8");
-                    response.getWriter().write("{\"code\":403,\"message\":\"无权限访问\",\"data\": null}");
-                })
-            );
+                // 关闭 CSRF：JWT 在请求头中传递，基于 Token 的无状态认证不需要 CSRF 防护
+                .csrf(AbstractHttpConfigurer::disable)
+                // 关闭表单登录与 HTTP Basic 登录：统一走自定义登录接口（/api/auth/login）签发 JWT
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                // 关闭默认登出：无状态认证由前端丢弃 Token 即可，无需服务端登出接口
+                .logout(AbstractHttpConfigurer::disable)
+                // 无状态会话策略：禁止创建 Session，避免引入额外状态
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 请求授权规则
+                .authorizeHttpRequests(auth -> auth
+                        // 认证白名单：登录、注册接口无需 Token 即可访问（路径按实际 Controller 调整）
+                        .requestMatchers("/api/user/login", "/api/user/register").permitAll()
+                        // 文档白名单：Knife4j 页面（/doc.html）、其静态资源、OpenAPI 描述接口、图标与错误页
+                        .requestMatchers("/doc.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico", "/error").permitAll()
+                        // 其余请求必须认证
+                        .anyRequest().authenticated()
+                )
+                // 认证异常处理：返回 JSON 而非默认 HTML，保持 REST 接口风格
+                .exceptionHandling(handling -> handling
+                        // 未认证（401）：Token 缺失、过期或非法
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"code\":401,\"message\":\"未登录或登录已过期\",\"data\": null}");
+                        })
+                        // 已认证但权限不足（403）
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"code\":403,\"message\":\"无权限访问\",\"data\": null}");
+                        })
+                );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
