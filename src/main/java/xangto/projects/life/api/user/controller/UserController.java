@@ -1,4 +1,4 @@
-package xangto.projects.life.api.user;
+package xangto.projects.life.api.user.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xangto.projects.life.api.user.dto.LoginDTO;
+import xangto.projects.life.api.user.dto.RegisterDTO;
+import xangto.projects.life.api.user.service.UserService;
+import xangto.projects.life.api.user.vo.LoginVO;
+import xangto.projects.life.api.user.vo.UserVO;
 import xangto.projects.life.common.Result;
 import xangto.projects.life.utils.JWTUtils;
 

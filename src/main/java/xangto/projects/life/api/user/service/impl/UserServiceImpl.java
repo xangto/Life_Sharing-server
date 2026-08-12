@@ -1,4 +1,4 @@
-package xangto.projects.life.api.user;
+package xangto.projects.life.api.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.spring.repository.CrudRepository;
@@ -6,6 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import xangto.projects.life.api.user.converter.UserConverter;
+import xangto.projects.life.api.user.dto.RegisterDTO;
+import xangto.projects.life.api.user.entity.UserEntity;
+import xangto.projects.life.api.user.mapper.UserMapper;
+import xangto.projects.life.api.user.service.UserService;
+import xangto.projects.life.api.user.vo.UserVO;
 import xangto.projects.life.api.user.mapper.UserMapper;
 
 @Service

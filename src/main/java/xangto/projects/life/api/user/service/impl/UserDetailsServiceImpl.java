@@ -1,4 +1,4 @@
-package xangto.projects.life.api.user;
+package xangto.projects.life.api.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import xangto.projects.life.api.user.entity.UserEntity;
+import xangto.projects.life.api.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor

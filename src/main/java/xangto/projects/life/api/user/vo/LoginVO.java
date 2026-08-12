@@ -1,4 +1,4 @@
-package xangto.projects.life.api.user;
+package xangto.projects.life.api.user.vo;
 
 import lombok.Data;
 

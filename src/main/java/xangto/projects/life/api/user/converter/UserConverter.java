@@ -1,8 +1,11 @@
-package xangto.projects.life.api.user;
+package xangto.projects.life.api.user.converter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import xangto.projects.life.api.user.dto.RegisterDTO;
+import xangto.projects.life.api.user.entity.UserEntity;
+import xangto.projects.life.api.user.vo.UserVO;
 
 @Mapper
 public interface UserConverter {
