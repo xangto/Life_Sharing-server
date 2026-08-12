@@ -26,6 +26,13 @@ mybatis-plus:
     global-config:
         db-config:
             id-type: assign_id
+
+springdoc:
+    api-docs:
+        enabled: true
+    swagger-ui:
+        path: /swagger-ui.html
+    override-with-generic-response: false
 knife4j:
     enable: true
     setting:

@@ -11,15 +11,12 @@ public interface UserConverter {
     // DTO -> Entity
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     UserEntity registerUser(RegisterDTO user);
 
-    // Entity -> VO
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    @Mapping(target = "role", ignore = true)
-    @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "createTime", ignore = true)
+    // Entity -> VO：username/nickname/avatar/email 按同名属性自动映射，
+    // Entity 中其余字段在 VO 中不存在，MapStruct 自动忽略（这些 @Mapping target 不存在于 VO，会使编译报错，已移除）
     UserVO toVO(UserEntity user);
 }

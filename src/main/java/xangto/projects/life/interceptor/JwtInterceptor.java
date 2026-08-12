@@ -24,6 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
     private final UserDetailsService userDetailsService;
+    private final JWTUtils jwtUtils;
 
     public void checkFailed(HttpServletResponse res) throws IOException {
         Result<Object> error = Result.error(ResultCode.UNAUTHORIZED);
@@ -52,14 +53,14 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
         try {
-            String username = JWTUtils.parseJWT(token);
+            String username = jwtUtils.parseJWT(token);
             // 用户名解析成功且当前请求还未认证时，才加载用户信息（避免每次请求重复认证）
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // 按用户名从数据库加载用户及角色权限
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 // token 有效（用户名匹配且未过期）才建立认证信息
-                if (JWTUtils.isTokenValid(token, userDetails)) {
+                if (jwtUtils.isTokenValid(token, userDetails)) {
                     // 构造认证令牌：凭证传 null（token 已在上面校验过），权限取用户角色
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

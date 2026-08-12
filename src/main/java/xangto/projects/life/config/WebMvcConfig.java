@@ -4,35 +4,32 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import xangto.projects.life.interceptor.JwtInterceptor;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final JwtInterceptor jwtInterceptor;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/employee/login",           // 后台登录放行
-                        "/user/login",              // 用户端登录放行
-                        "/user/loginout",           // 用户端退出放行
-                        "/common/**",               // 文件上传下载
-                        "/backend/**",              // 后台管理静态资源
-                        "/front/**",                // 用户前端静态资源
-                        "/doc.html",                // Knife4j 文档页面
-                        "/v3/api-docs/**",          // OpenAPI 文档接口
-                        "/swagger-ui/**",           // Swagger UI 资源
-                        "/webjars/**"               // Knife4j/Swagger 静态依赖
-                );
-    }
+//    private final JwtInterceptor jwtInterceptor;
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(jwtInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(
+//                        "/employee/login",           // 后台登录放行
+//                        "/user/login",              // 用户端登录放行
+//                        "/user/loginout",           // 用户端退出放行
+//                        "/common/**",               // 文件上传下载
+//                        "/backend/**",              // 后台管理静态资源
+//                        "/front/**",                // 用户前端静态资源
+//                        "/doc.html",                // Knife4j 文档页面
+//                        "/v3/api-docs/**",          // OpenAPI 文档接口
+//                        "/swagger-ui/**",           // Swagger UI 资源
+//                        "/webjars/**"               // Knife4j/Swagger 静态依赖
+//                );
+//    }
 
     /**
      * 全部跨域全通过，开发环境用；生产不要用*

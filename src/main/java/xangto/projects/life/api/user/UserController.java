@@ -17,13 +17,15 @@ import xangto.projects.life.utils.JWTUtils;
 
 @Tag(name = "用户管理")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 public class UserController {
 
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService;
+    @Autowired
+    private JWTUtils jwtUtils;
 
     @Operation(summary = "登录")
     @PostMapping("/login")
@@ -35,7 +37,7 @@ public class UserController {
         UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
         if (userDetails != null) {
             UserVO userVO = userService.findByUsername(userDetails.getUsername());
-            String token = JWTUtils.genJWT(userVO.getUsername());
+            String token = jwtUtils.genJWT(userVO.getUsername());
             LoginVO vo = new LoginVO();
             vo.setToken(token);
             vo.setUser(userVO);
