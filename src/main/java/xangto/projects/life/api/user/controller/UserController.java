@@ -3,7 +3,7 @@ package xangto.projects.life.api.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,16 +21,14 @@ import xangto.projects.life.common.Result;
 import xangto.projects.life.utils.JWTUtils;
 
 @Tag(name = "用户管理")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/user")
 public class UserController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final JWTUtils jwtUtils;
 
     @Operation(summary = "登录")
     @PostMapping("/login")
@@ -56,11 +54,8 @@ public class UserController {
     @Operation(summary = "注册")
     @PostMapping("/register")
     public Result<?> register(@Valid @RequestBody RegisterDTO user) {
-        boolean flag = userService.registerUser(user);
-        if (flag) {
-            return Result.success("注册成功");
-        } else {
-            return Result.error("注册失败");
-        }
+        // 业务失败（如用户名已存在）由 GlobalExceptionHandler 统一返回 409，走到这里即注册成功
+        userService.registerUser(user);
+        return Result.success("注册成功");
     }
 }

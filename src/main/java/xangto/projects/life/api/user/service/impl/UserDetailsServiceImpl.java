@@ -1,7 +1,8 @@
 package xangto.projects.life.api.user.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,7 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @NonNull
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        QueryWrapper<UserEntity> wrapper = new QueryWrapper<UserEntity>().eq("username", username);
+        LambdaQueryWrapper<UserEntity> wrapper =
+                new LambdaQueryWrapper<UserEntity>().eq(StringUtils.isNotBlank(username), UserEntity::getUsername, username);
         UserEntity one = userService.getOne(wrapper);
         if (one == null) {
             throw new UsernameNotFoundException(username);

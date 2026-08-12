@@ -1,5 +1,6 @@
 package xangto.projects.life.config;
 
+import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import xangto.projects.life.common.Result;
+import xangto.projects.life.common.ResultCode;
 import xangto.projects.life.filter.JwtAuthenticationFilter;
 
 /**
@@ -77,19 +80,19 @@ public class SecurityConfig {
                         // 其余请求不用认证
                         .anyRequest().permitAll()
                 )
-                // 认证异常处理：返回 JSON 而非默认 HTML，保持 REST 接口风格
+                // 认证异常处理：返回 Result JSON 而非默认 HTML，与全局异常处理器保持同一数据结构
                 .exceptionHandling(handling -> handling
                         // 未认证（401）：Token 缺失、过期或非法
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":401,\"message\":\"未登录或登录已过期\",\"data\": null}");
+                            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.UNAUTHORIZED)));
                         })
                         // 已认证但权限不足（403）
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":403,\"message\":\"无权限访问\",\"data\": null}");
+                            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.FORBIDDEN)));
                         })
                 );
 

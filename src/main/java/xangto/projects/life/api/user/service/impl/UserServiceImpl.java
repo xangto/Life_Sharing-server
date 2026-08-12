@@ -3,6 +3,7 @@ package xangto.projects.life.api.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.spring.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,7 +13,8 @@ import xangto.projects.life.api.user.entity.UserEntity;
 import xangto.projects.life.api.user.mapper.UserMapper;
 import xangto.projects.life.api.user.service.UserService;
 import xangto.projects.life.api.user.vo.UserVO;
-import xangto.projects.life.api.user.mapper.UserMapper;
+import xangto.projects.life.common.BusinessException;
+import xangto.projects.life.common.ResultCode;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +24,23 @@ public class UserServiceImpl extends CrudRepository<UserMapper, UserEntity> impl
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public boolean registerUser(RegisterDTO user) {
-        // 用户名唯一性检查：已存在则注册失败，避免重复注册或触发数据库唯一键异常
+    public void registerUser(RegisterDTO user) {
+        // 用户名唯一性检查：已存在则抛出业务异常，由全局异常处理器返回 HTTP 409
         if (findByUsername(user.getUsername()) != null) {
-            return false;
+            throw new BusinessException(ResultCode.CONFLICT, "用户名已存在");
         }
         UserEntity registerUser = UserConverter.INSTANCE.registerUser(user);
         // 密码加密后入库（此前存明文，与登录侧的 BCrypt 比对矛盾导致登录必失败）
         registerUser.setPassword(passwordEncoder.encode(user.getPassword()));
         // 使用 Spring Security 约定：hasRole("USER") 需要权限字符串以 ROLE_ 开头
         registerUser.setRole("ROLE_USER");
-        return this.save(registerUser);
+        try {
+            this.save(registerUser);
+        } catch (DuplicateKeyException e) {
+            // 并发兜底：数据库唯一索引保证原子性，两个同名注册同时通过预检查时，
+            // 后插入者命中唯一索引抛 DuplicateKeyException，同样转为 409
+            throw new BusinessException(ResultCode.CONFLICT, "用户名已存在");
+        }
     }
 
     @Override
