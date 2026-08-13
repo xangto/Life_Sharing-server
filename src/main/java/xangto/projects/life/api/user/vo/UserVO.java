@@ -2,9 +2,13 @@ package xangto.projects.life.api.user.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import tools.jackson.databind.annotation.JsonSerialize;
+import xangto.projects.life.common.LongToStringSerializer;
 
 @Data
 public class UserVO {
+    @JsonSerialize(using = LongToStringSerializer.class)
+    private Long id;
     @Schema(description = "用户名")
     private String username;
     @Schema(description = "用户昵称")
