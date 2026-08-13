@@ -8,10 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.user.dto.LoginDTO;
 import xangto.projects.life.api.user.dto.RegisterDTO;
 import xangto.projects.life.api.user.service.UserService;
@@ -57,5 +54,16 @@ public class UserController {
         // 业务失败（如用户名已存在）由 GlobalExceptionHandler 统一返回 409，走到这里即注册成功
         userService.registerUser(user);
         return Result.success("注册成功");
+    }
+
+    @Operation(summary = "删除用户")
+    @DeleteMapping("/{id}")
+    public Result<?> delete(@PathVariable Long id) {
+        boolean b = userService.removeById(id);
+        if (b) {
+            return Result.success();
+        } else {
+            return Result.error();
+        }
     }
 }

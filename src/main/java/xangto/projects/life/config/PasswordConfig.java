@@ -10,8 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * <p>单独成类以打破 Bean 循环依赖：SecurityConfig 构造时需要注入 JwtAuthenticationFilter，
  * 过滤器依赖 UserDetailsService（UserDetailsServiceImpl），
- * UserDetailsServiceImpl 依赖 UserService（UserServiceImpl），
- * UserServiceImpl 依赖 PasswordEncoder。</p>
+ * UserDetailsServiceImpl 依赖 UserService，PasswordEncoder</p>
  *
  * <p>若 PasswordEncoder 仍定义在 SecurityConfig 的 @Bean 方法里，
  * 创建 PasswordEncoder 需要 SecurityConfig 实例，

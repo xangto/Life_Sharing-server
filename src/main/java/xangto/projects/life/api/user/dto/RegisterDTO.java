@@ -13,6 +13,7 @@ public class RegisterDTO {
     @NotBlank(message = "密码不能为空")
     @Schema(description = "用户密码")
     private String password;
+    @NotBlank(message = "用户昵称不能为空")
     @Schema(description = "用户昵称")
     private String nickname;
     @Schema(description = "用户头像url")
