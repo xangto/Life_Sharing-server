@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.category.dto.CategoryCreateDTO;
 import xangto.projects.life.api.category.dto.CategoryUpdateDTO;
@@ -21,6 +22,7 @@ public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @Operation(summary = "新建文章分类")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Result<?> createCategory(@Valid @RequestBody CategoryCreateDTO dto) {
         boolean flag = categoryService.createCategory(dto);
@@ -35,6 +37,7 @@ public class CategoryAdminController {
     }
 
     @Operation(summary = "更新文章分类")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
     public Result<?> updateCategory(@Valid @RequestBody CategoryUpdateDTO dto) {
         boolean b = categoryService.updateCategory(dto);
@@ -42,6 +45,7 @@ public class CategoryAdminController {
     }
 
     @Operation(summary = "删除文章分类")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public Result<?> deleteCategory(@PathVariable Long id) {
         boolean b = categoryService.deleteCategory(id);

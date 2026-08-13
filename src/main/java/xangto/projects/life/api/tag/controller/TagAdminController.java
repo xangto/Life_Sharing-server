@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.tag.dto.TagCreateDTO;
 import xangto.projects.life.api.tag.dto.TagUpdateDTO;
@@ -21,6 +22,7 @@ public class TagAdminController {
     private final TagService tagService;
 
     @Operation(summary = "新建标签")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Result<?> createCategory(@Valid @RequestBody TagCreateDTO dto) {
         boolean flag = tagService.createTag(dto);
@@ -35,6 +37,7 @@ public class TagAdminController {
     }
 
     @Operation(summary = "更新标签")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
     public Result<?> updateCategory(@Valid @RequestBody TagUpdateDTO dto) {
         boolean b = tagService.updateTag(dto);
@@ -42,6 +45,7 @@ public class TagAdminController {
     }
 
     @Operation(summary = "删除标签")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public Result<?> deleteCategory(@PathVariable Long id) {
         boolean b = tagService.deleteTag(id);
