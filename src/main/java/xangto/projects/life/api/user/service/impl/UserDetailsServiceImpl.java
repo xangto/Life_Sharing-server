@@ -45,6 +45,9 @@ public class UserDetailsServiceImpl extends CrudRepository<UserMapper, UserEntit
                 .password(one.getPassword())
                 .authorities(new SimpleGrantedAuthority(one.getRole()))
                 .disabled(false)
+//                .accountExpired(false)   //账号是否过期
+//                .credentialsExpired(false) //凭证(密码)是否过期
+//                .accountLocked(false)    //账号是否锁定
                 .build();
     }
 

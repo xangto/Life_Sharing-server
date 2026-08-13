@@ -38,7 +38,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 // 允许所有来源
-                .allowedOrigins("http://192.168.0.105:3000")
+                .allowedOrigins("*")
                 // 允许所有请求方法
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // 允许全部请求头

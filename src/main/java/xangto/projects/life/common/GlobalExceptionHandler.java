@@ -3,6 +3,7 @@ package xangto.projects.life.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +33,17 @@ public class GlobalExceptionHandler {
         // HTTP 401 与 SecurityConfig 的 authenticationEntryPoint 语义一致：未认证
         return ResponseEntity.status(ResultCode.UNAUTHORIZED.getCode())
                 .body(Result.error(ResultCode.UNAUTHORIZED, "用户名或密码错误"));
+    }
+
+    /**
+     * 处理 @PreAuthorize 方法鉴权抛出的权限不足
+     *
+     */
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Result<Void>> handleAccessDenied(Exception e) {
+        log.warn("无操作权限: {}", e.getMessage());
+        return ResponseEntity.status(ResultCode.FORBIDDEN.getCode())
+                .body(Result.error(ResultCode.FORBIDDEN));
     }
 
     /**
