@@ -1,4 +1,4 @@
-package xangto.projects.life.api.category.entity;
+package xangto.projects.life.api.tag.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,11 +8,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("category")
-public class CategoryEntity implements Serializable {
+@TableName("tag")
+public class TagEntity implements Serializable {
     @TableId
     private Long id;
     private String name;
+    private String color;
     private LocalDateTime updateTime;
     private LocalDateTime createTime;
 }
