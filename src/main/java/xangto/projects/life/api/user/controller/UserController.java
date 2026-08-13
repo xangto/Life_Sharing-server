@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.user.dto.LoginDTO;
 import xangto.projects.life.api.user.dto.RegisterDTO;
+import xangto.projects.life.api.user.dto.UpdatePwdDTO;
 import xangto.projects.life.api.user.service.UserService;
 import xangto.projects.life.api.user.vo.LoginVO;
 import xangto.projects.life.api.user.vo.UserVO;
@@ -55,6 +56,14 @@ public class UserController {
         // 业务失败（如用户名已存在）由 GlobalExceptionHandler 统一返回 409，走到这里即注册成功
         userService.registerUser(user);
         return Result.success("注册成功");
+    }
+
+    @Operation(summary = "更新密码")
+    @PreAuthorize("hasRole('ADMIN') and authentication.name == #dto.username") // 只有admin才能改自己的密码,其他用户的密码都不让改
+    @PostMapping("/update/password")
+    public Result<?> updatePassword(@RequestBody UpdatePwdDTO dto) {
+        userService.updateUser(dto);
+        return Result.success();
     }
 
     @Operation(summary = "删除用户")

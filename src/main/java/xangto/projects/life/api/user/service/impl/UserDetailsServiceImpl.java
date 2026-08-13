@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import xangto.projects.life.api.user.converter.UserConverter;
 import xangto.projects.life.api.user.dto.RegisterDTO;
+import xangto.projects.life.api.user.dto.UpdatePwdDTO;
 import xangto.projects.life.api.user.entity.UserEntity;
 import xangto.projects.life.api.user.mapper.UserMapper;
 import xangto.projects.life.api.user.service.UserService;
@@ -73,5 +74,20 @@ public class UserDetailsServiceImpl extends CrudRepository<UserMapper, UserEntit
                 new LambdaQueryWrapper<UserEntity>().eq(StringUtils.isNotBlank(username), UserEntity::getUsername, username);
         UserEntity userEntity = this.getOne(eq);
         return UserConverter.INSTANCE.toVO(userEntity);
+    }
+
+    @Override
+    public void updateUser(UpdatePwdDTO dto) {
+        UserEntity userEntity = this.getById(dto.getUserId());
+        if (userEntity == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "用户不存在");
+        }
+        boolean b = passwordEncoder.matches(dto.getOldPwd(), userEntity.getPassword());
+        if (b) {
+            userEntity.setPassword(passwordEncoder.encode(dto.getNewPwd()));
+            this.updateById(userEntity);
+        } else {
+            throw new BusinessException(ResultCode.ERROR, "旧密码错误");
+        }
     }
 }
