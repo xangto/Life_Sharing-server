@@ -2,6 +2,7 @@ package xangto.projects.life.api.category.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import xangto.projects.life.api.category.dto.CategoryCreateDTO;
+import xangto.projects.life.api.category.dto.CategoryUpdateDTO;
 import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.vo.CategoryVO;
 import xangto.projects.life.common.PageDTO;
@@ -13,4 +14,6 @@ public interface CategoryService extends IRepository<CategoryEntity> {
     PageVO<CategoryVO> getCategoryList(PageDTO dto);
 
     boolean deleteCategory(Long id);
+
+    boolean updateCategory(CategoryUpdateDTO dto);
 }

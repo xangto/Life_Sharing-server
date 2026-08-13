@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import xangto.projects.life.api.category.dto.CategoryCreateDTO;
+import xangto.projects.life.api.category.dto.CategoryUpdateDTO;
 import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.mapper.CategoryMapper;
 import xangto.projects.life.api.category.service.CategoryService;
@@ -37,7 +38,16 @@ public class CategoryServiceImpl extends CrudRepository<CategoryMapper, Category
     }
 
     @Override
+    public boolean updateCategory(CategoryUpdateDTO dto) {
+        CategoryEntity entity = new CategoryEntity();
+        entity.setName(dto.getName());
+        entity.setId(dto.getId());
+        return this.updateById(entity);
+    }
+
+    @Override
     public boolean deleteCategory(Long id) {
+        if (id <= 0) return false;
         return this.removeById(id);
     }
 }
