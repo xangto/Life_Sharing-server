@@ -13,7 +13,5 @@ public class MomentUpdateDTO {
     @NotBlank
     private String content;
     @NotNull
-    @Min(0)
-    @Max(1)
-    private Short isPublished;
+    private Boolean isPublished;
 }

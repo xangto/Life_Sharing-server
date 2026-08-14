@@ -14,7 +14,7 @@ public class MomentEntity implements Serializable {
     private Long id;
     private String content;
     private Integer likes;
-    private Short isPublished;
+    private Boolean isPublished;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

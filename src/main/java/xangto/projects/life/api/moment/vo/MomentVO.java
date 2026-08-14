@@ -12,6 +12,6 @@ public class MomentVO {
     private Long id;
     private String content;
     private Integer likes;
-    private Short isPublished;
+    private Boolean isPublished;
     private LocalDateTime createTime;
 }
