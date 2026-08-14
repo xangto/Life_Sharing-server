@@ -14,6 +14,7 @@ public class BlogEntity implements Serializable {
     private Long id;
     private String title;
     private String firstPicture;
+    private String description;
     private String content;
     private Boolean isPublished;
     private Integer views;

@@ -1,4 +1,4 @@
-package xangto.projects.life.api.blog.service.impl;
+package xangto.projects.life.api.blog.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import xangto.projects.life.api.blog.dto.BlogCreateDTO;

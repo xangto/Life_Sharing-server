@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.blog.dto.BlogCreateDTO;
 import xangto.projects.life.api.blog.dto.BlogListDTO;
-import xangto.projects.life.api.blog.service.impl.BlogService;
+import xangto.projects.life.api.blog.service.BlogService;
 import xangto.projects.life.api.blog.vo.BlogVO;
 import xangto.projects.life.common.PageVO;
 import xangto.projects.life.common.Result;
@@ -25,7 +25,7 @@ public class BlogAdminController {
 
     @Operation(summary = "文章列表")
     @GetMapping("/list")
-    public Result<PageVO<BlogVO>> getBlogList(BlogListDTO dto) {
+    public Result<PageVO<BlogVO>> getBlogList(@Valid BlogListDTO dto) {
         PageVO<BlogVO> vo = blogService.getBlogList(dto);
         return Result.success(vo);
     }

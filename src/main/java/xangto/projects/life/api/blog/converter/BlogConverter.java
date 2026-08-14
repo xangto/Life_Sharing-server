@@ -21,7 +21,9 @@ public interface BlogConverter {
     @Mapping(target = "updateTime", ignore = true)
     BlogEntity toEntity(BlogCreateDTO dto);
 
-    //    @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "content", ignore = true)
     BlogVO toVO(BlogEntity entity);
 
     List<BlogVO> toVOList(List<BlogEntity> entities);
