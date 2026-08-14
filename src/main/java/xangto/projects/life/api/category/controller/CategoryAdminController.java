@@ -3,8 +3,10 @@ package xangto.projects.life.api.category.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.category.dto.CategoryCreateDTO;
 import xangto.projects.life.api.category.dto.CategoryUpdateDTO;
@@ -16,6 +18,7 @@ import xangto.projects.life.common.Result;
 
 @Tag(name = "文章分类管理 admin")
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/admin/category")
 public class CategoryAdminController {
@@ -31,7 +34,7 @@ public class CategoryAdminController {
 
     @Operation(summary = "文章分类列表")
     @GetMapping("/list")
-    public Result<PageVO<CategoryVO>> listCategory(PageDTO dto) {
+    public Result<PageVO<CategoryVO>> listCategory(@Valid PageDTO dto) {
         PageVO<CategoryVO> list = categoryService.getCategoryList(dto);
         return Result.success(list);
     }
@@ -47,7 +50,7 @@ public class CategoryAdminController {
     @Operation(summary = "删除文章分类")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public Result<?> deleteCategory(@PathVariable Long id) {
+    public Result<?> deleteCategory(@PathVariable @Min(1) Long id) {
         boolean b = categoryService.deleteCategory(id);
         return b ? Result.success() : Result.error();
     }

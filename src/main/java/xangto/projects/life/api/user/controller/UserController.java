@@ -3,12 +3,14 @@ package xangto.projects.life.api.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xangto.projects.life.api.user.dto.LoginDTO;
 import xangto.projects.life.api.user.dto.RegisterDTO;
@@ -22,6 +24,7 @@ import xangto.projects.life.utils.JWTUtils;
 @Tag(name = "用户管理")
 @RequiredArgsConstructor
 @RestController
+@Validated
 @RequestMapping("/admin/user")
 public class UserController {
 
@@ -61,7 +64,7 @@ public class UserController {
     @Operation(summary = "更新密码")
     @PreAuthorize("hasRole('ADMIN') and authentication.name == #dto.username") // 只有admin才能改自己的密码,其他用户的密码都不让改
     @PostMapping("/update/password")
-    public Result<?> updatePassword(@RequestBody UpdatePwdDTO dto) {
+    public Result<?> updatePassword(@Valid @RequestBody UpdatePwdDTO dto) {
         userService.updateUser(dto);
         return Result.success();
     }
@@ -70,7 +73,7 @@ public class UserController {
 //    @PreAuthorize("hasAuthority('user:delete')")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Long id) {
+    public Result<?> delete(@PathVariable @Min(1) Long id) {
         boolean b = userService.removeById(id);
         if (b) {
             return Result.success();

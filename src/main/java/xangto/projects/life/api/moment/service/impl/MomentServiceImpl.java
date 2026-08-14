@@ -55,7 +55,6 @@ public class MomentServiceImpl extends CrudRepository<MomentMapper, MomentEntity
 
     @Override
     public boolean deleteMoment(Long id) {
-        if (id <= 0) return false;
         return this.removeById(id);
     }
 }

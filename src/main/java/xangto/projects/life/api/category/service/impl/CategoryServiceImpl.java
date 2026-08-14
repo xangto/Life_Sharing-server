@@ -47,7 +47,6 @@ public class CategoryServiceImpl extends CrudRepository<CategoryMapper, Category
 
     @Override
     public boolean deleteCategory(Long id) {
-        if (id <= 0) return false;
         return this.removeById(id);
     }
 }

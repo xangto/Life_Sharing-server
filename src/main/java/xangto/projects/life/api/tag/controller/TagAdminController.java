@@ -3,6 +3,7 @@ package xangto.projects.life.api.tag.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,14 @@ public class TagAdminController {
     @Operation(summary = "新建标签")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public Result<?> createCategory(@Valid @RequestBody TagCreateDTO dto) {
+    public Result<?> createTag(@Valid @RequestBody TagCreateDTO dto) {
         boolean flag = tagService.createTag(dto);
         return flag ? Result.success() : Result.error();
     }
 
     @Operation(summary = "标签列表")
     @GetMapping("/list")
-    public Result<PageVO<TagVO>> listCategory(PageDTO dto) {
+    public Result<PageVO<TagVO>> listTag(PageDTO dto) {
         PageVO<TagVO> list = tagService.getTagList(dto);
         return Result.success(list);
     }
@@ -39,7 +40,7 @@ public class TagAdminController {
     @Operation(summary = "更新标签")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
-    public Result<?> updateCategory(@Valid @RequestBody TagUpdateDTO dto) {
+    public Result<?> updateTag(@Valid @RequestBody TagUpdateDTO dto) {
         boolean b = tagService.updateTag(dto);
         return b ? Result.success() : Result.error();
     }
@@ -47,7 +48,7 @@ public class TagAdminController {
     @Operation(summary = "删除标签")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public Result<?> deleteCategory(@PathVariable Long id) {
+    public Result<?> deleteTag(@PathVariable @Min(1) Long id) {
         boolean b = tagService.deleteTag(id);
         return b ? Result.success() : Result.error();
     }

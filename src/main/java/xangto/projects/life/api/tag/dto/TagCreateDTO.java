@@ -7,5 +7,6 @@ import lombok.Data;
 public class TagCreateDTO {
     @NotBlank
     private String name;
+    @NotBlank
     private String color;
 }

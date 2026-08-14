@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +37,7 @@ public class MomentAdminController {
 
     @Operation(summary = "动态列表")
     @GetMapping("/list")
-    public Result<PageVO<MomentVO>> listMoment(PageDTO dto) {
+    public Result<PageVO<MomentVO>> listMoment(@Valid PageDTO dto) {
         PageVO<MomentVO> list = momentService.getMomentList(dto);
         return Result.success(list);
     }
@@ -62,7 +63,7 @@ public class MomentAdminController {
     @Operation(summary = "删除动态")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public Result<?> deleteMoment(@PathVariable Long id) {
+    public Result<?> deleteMoment(@PathVariable @Min(1) Long id) {
         boolean b = momentService.deleteMoment(id);
         return b ? Result.success() : Result.error();
     }

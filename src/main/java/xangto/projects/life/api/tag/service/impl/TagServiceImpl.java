@@ -50,7 +50,6 @@ public class TagServiceImpl extends CrudRepository<TagMapper, TagEntity> impleme
 
     @Override
     public boolean deleteTag(Long id) {
-        if (id <= 0) return false;
         return this.removeById(id);
     }
 }
