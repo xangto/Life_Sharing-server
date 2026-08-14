@@ -1,7 +1,7 @@
 package xangto.projects.life.common;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -60,14 +60,11 @@ public class GlobalExceptionHandler {
      * 请求参数校验失败（@Valid + @NotBlank 等约束注解触发）
      * 返回第一条字段错误信息
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Result<Void>> handleValidException(MethodArgumentNotValidException e) {
-        String message = e.getBindingResult().getFieldErrors().stream()
-                .findFirst()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .orElse(ResultCode.PARAM_VALIDATE_FAIL.getMessage());
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
+    public ResponseEntity<Result<Void>> handleValidException(Exception e) {
+        log.warn("参数异常: {}", e.getMessage());
         return ResponseEntity.status(ResultCode.PARAM_VALIDATE_FAIL.getCode())
-                .body(Result.error(ResultCode.PARAM_VALIDATE_FAIL, message));
+                .body(Result.error(ResultCode.PARAM_VALIDATE_FAIL));
     }
 
     /**
