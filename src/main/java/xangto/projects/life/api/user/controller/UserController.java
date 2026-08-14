@@ -42,7 +42,7 @@ public class UserController {
         UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
         if (userDetails != null) {
             UserVO userVO = userService.findByUsername(userDetails.getUsername());
-            String token = jwtUtils.genJWT(userVO.getUsername());
+            String token = jwtUtils.genJWT(userVO.getUsername(), userVO.getId());
             LoginVO vo = new LoginVO();
             vo.setToken(token);
             vo.setUser(userVO);

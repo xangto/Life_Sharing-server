@@ -35,11 +35,12 @@ public class JWTUtils {
     private Long expiresTimeHours;
 
     // 生成token
-    public String genJWT(String username) {
+    public String genJWT(String username, Long id) {
         Algorithm algorithm = Algorithm.HMAC256(screct);
         return JWT.create()
                 .withIssuer(issure)                  // 设置发行者
                 .withSubject(username)              // 设置主题
+                .withClaim("userId", id)
                 .withExpiresAt(Instant.now().plus(expiresTimeHours, ChronoUnit.HOURS)) // 设置过期时间
                 .sign(algorithm);
     }
@@ -47,6 +48,11 @@ public class JWTUtils {
     // 解析jwt
     public String parseJWT(String token) {
         return verify(token).getSubject();
+    }
+
+    // 获取 userId
+    public Long getUserId(String token) {
+        return verify(token).getClaim("userId").asLong();
     }
 
     /**
