@@ -1,21 +1,29 @@
 package xangto.projects.life.api.category.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.repository.CrudRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import xangto.projects.life.api.blog.entity.BlogEntity;
+import xangto.projects.life.api.blog.service.BlogService;
 import xangto.projects.life.api.category.dto.CategoryCreateDTO;
 import xangto.projects.life.api.category.dto.CategoryUpdateDTO;
 import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.mapper.CategoryMapper;
 import xangto.projects.life.api.category.service.CategoryService;
 import xangto.projects.life.api.category.vo.CategoryVO;
+import xangto.projects.life.common.BusinessException;
 import xangto.projects.life.common.PageDTO;
 import xangto.projects.life.common.PageVO;
+import xangto.projects.life.common.ResultCode;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl extends CrudRepository<CategoryMapper, CategoryEntity> implements CategoryService {
+    private final BlogService blogService;
 
     @Override
     public boolean createCategory(CategoryCreateDTO dto) {
@@ -47,6 +55,11 @@ public class CategoryServiceImpl extends CrudRepository<CategoryMapper, Category
 
     @Override
     public boolean deleteCategory(Long id) {
+        LambdaQueryWrapper<BlogEntity> wrapper = new LambdaQueryWrapper<BlogEntity>().eq(BlogEntity::getCategoryId, id);
+        long count = blogService.count(wrapper);
+        if (count > 0) {
+            throw new BusinessException(ResultCode.ERROR, "有文章关联该分类");
+        }
         return this.removeById(id);
     }
 }

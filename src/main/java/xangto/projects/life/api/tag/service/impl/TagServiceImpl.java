@@ -1,21 +1,29 @@
 package xangto.projects.life.api.tag.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.repository.CrudRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import xangto.projects.life.api.blog.entity.BlogEntity;
+import xangto.projects.life.api.blog.service.BlogService;
 import xangto.projects.life.api.tag.dto.TagCreateDTO;
 import xangto.projects.life.api.tag.dto.TagUpdateDTO;
 import xangto.projects.life.api.tag.entity.TagEntity;
 import xangto.projects.life.api.tag.mapper.TagMapper;
 import xangto.projects.life.api.tag.service.TagService;
 import xangto.projects.life.api.tag.vo.TagVO;
+import xangto.projects.life.common.BusinessException;
 import xangto.projects.life.common.PageDTO;
 import xangto.projects.life.common.PageVO;
+import xangto.projects.life.common.ResultCode;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class TagServiceImpl extends CrudRepository<TagMapper, TagEntity> implements TagService {
+    private final BlogService blogService;
 
     @Override
     public boolean createTag(TagCreateDTO dto) {
@@ -50,6 +58,11 @@ public class TagServiceImpl extends CrudRepository<TagMapper, TagEntity> impleme
 
     @Override
     public boolean deleteTag(Long id) {
+        LambdaQueryWrapper<BlogEntity> wrapper = new LambdaQueryWrapper<BlogEntity>().eq(BlogEntity::getCategoryId, id);
+        long count = blogService.count(wrapper);
+        if (count > 0) {
+            throw new BusinessException(ResultCode.ERROR, "有文章关联该标签");
+        }
         return this.removeById(id);
     }
 }
