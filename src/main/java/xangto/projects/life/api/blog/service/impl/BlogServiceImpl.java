@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xangto.projects.life.api.blog.converter.BlogConverter;
 import xangto.projects.life.api.blog.dto.BlogCreateDTO;
 import xangto.projects.life.api.blog.dto.BlogListDTO;
+import xangto.projects.life.api.blog.dto.BlogUpdateDTO;
 import xangto.projects.life.api.blog.entity.BlogEntity;
 import xangto.projects.life.api.blog.mapper.BlogMapper;
 import xangto.projects.life.api.blog.service.BlogService;
@@ -96,5 +97,16 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean deleteBlog(Long id) {
+        return this.removeById(id);
+    }
+
+    @Override
+    public boolean updateBlog(BlogUpdateDTO dto) {
+        BlogEntity entity = BlogConverter.INSTANCE.toEntity(dto);
+        return this.updateById(entity);
     }
 }

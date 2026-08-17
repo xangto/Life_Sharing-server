@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import xangto.projects.life.api.blog.dto.BlogCreateDTO;
+import xangto.projects.life.api.blog.dto.BlogUpdateDTO;
 import xangto.projects.life.api.blog.entity.BlogEntity;
 import xangto.projects.life.api.blog.vo.BlogVO;
 
@@ -20,6 +21,10 @@ public interface BlogConverter {
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     BlogEntity toEntity(BlogCreateDTO dto);
+
+    @Mapping(target = "createTime", ignore = true)
+    @Mapping(target = "updateTime", ignore = true)
+    BlogEntity toEntity(BlogUpdateDTO dto);
 
     @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm:ss")

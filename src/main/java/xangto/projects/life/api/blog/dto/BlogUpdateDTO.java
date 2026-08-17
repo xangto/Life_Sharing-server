@@ -6,7 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class BlogCreateDTO {
+public class BlogUpdateDTO {
+    @Schema(type = "string")
+    @NotNull
+    private Long id;
     @NotBlank
     private String title;
     @NotBlank

@@ -7,8 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import xangto.projects.life.api.blog.dto.BlogCreateDTO;
-import xangto.projects.life.api.blog.dto.BlogListDTO;
+import xangto.projects.life.api.blog.converter.BlogConverter;
+import xangto.projects.life.api.blog.dto.*;
+import xangto.projects.life.api.blog.entity.BlogEntity;
 import xangto.projects.life.api.blog.service.BlogService;
 import xangto.projects.life.api.blog.vo.BlogVO;
 import xangto.projects.life.common.PageVO;
@@ -38,6 +39,51 @@ public class BlogAdminController {
         String token = authHeader.substring(7);
         Long userId = jwtUtils.getUserId(token);
         boolean b = blogService.createBlog(dto, userId);
+        return b ? Result.success() : Result.error();
+    }
+
+    @Operation(summary = "删除文章")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public Result<?> deleteBlog(@PathVariable Long id) {
+        boolean b = blogService.deleteBlog(id);
+        return b ? Result.success() : Result.error();
+    }
+
+    @Operation(summary = "获取文章详情")
+    @PostMapping("/{id}")
+    public Result<BlogVO> getBlogById(@PathVariable Long id) {
+        BlogEntity entity = blogService.getById(id);
+        if (entity == null) {
+            return Result.error("查询数据错误");
+        } else {
+            BlogVO vo = BlogConverter.INSTANCE.toVO(entity);
+            vo.setContent(entity.getContent());
+            return Result.success(vo);
+        }
+    }
+
+    @Operation(summary = "更新文章")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping
+    public Result<?> updateBlog(@Valid @RequestBody BlogUpdateDTO dto) {
+        boolean b = blogService.updateBlog(dto);
+        return b ? Result.success() : Result.error();
+    }
+
+    @Operation(summary = "是否置顶")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/top")
+    public Result<?> updateBlogTop(@Valid @RequestBody BlogUpdateTopDTO dto) {
+        boolean b = blogService.update().set("is_top", dto.getIsTop()).eq("id", dto.getId()).update();
+        return b ? Result.success() : Result.error();
+    }
+
+    @Operation(summary = "是否发布")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/publish")
+    public Result<?> updateBlogPublish(@Valid @RequestBody BlogUpdatePublishDTO dto) {
+        boolean b = blogService.update().set("is_published", dto.getIsPublished()).eq("id", dto.getId()).update();
         return b ? Result.success() : Result.error();
     }
 }

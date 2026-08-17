@@ -17,6 +17,8 @@ public class BlogVO {
     private Integer words;
     private Integer readTime;
     private Boolean isTop;
+    @JsonSerialize(using = LongToStringSerializer.class)
+    private Long categoryId;
     private String updateTime;
     private String createTime;
 }
