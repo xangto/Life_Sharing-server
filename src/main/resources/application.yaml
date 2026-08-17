@@ -13,7 +13,7 @@ spring:
             username: root
             password: xangto123
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://localhost:3306/life-server?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://localhost:3306/life-service?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
 
 jwt:
     issure: jQiaos
