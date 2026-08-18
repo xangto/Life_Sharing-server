@@ -45,6 +45,7 @@ public class BlogController {
     }
 
     // todo 分页查询文章，分类，标签
+    // todo 只查找公布的
 
     @Operation(summary = "获取文章详情")
     @GetMapping("/{id}")

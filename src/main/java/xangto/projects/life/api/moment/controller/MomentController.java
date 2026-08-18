@@ -26,6 +26,7 @@ public class MomentController {
     @GetMapping("/list")
     public Result<PageVO<MomentVO>> listMoment(@Valid PageDTO dto) {
         PageVO<MomentVO> list = momentService.getMomentList(dto);
+        // todo 只查找公布的
         return Result.success(list);
     }
 }

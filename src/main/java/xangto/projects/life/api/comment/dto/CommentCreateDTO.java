@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+@Schema(description = "文章评论")
 @Data
 public class CommentCreateDTO {
     @NotBlank
@@ -13,16 +14,16 @@ public class CommentCreateDTO {
     @NotBlank
     private String content;
     private String avatar;
-    @Schema(hidden = true)
-    private String ip;
+//    @Schema(hidden = true)
+//    private String ip;
     @NotNull
     @Schema(type = "string")
     private Long blogId;
-    private String website;
+//    private String website;
     @Schema(type = "string")
     private Long parentId;
-    @NotNull
-    private Integer type;
+//    @NotNull
+//    private Integer type;
     private Boolean isAdminComment;
-    private Boolean isPublished;
+//    private Boolean isPublished;
 }
