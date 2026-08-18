@@ -78,7 +78,9 @@ public class UserDetailsServiceImpl extends CrudRepository<UserMapper, UserEntit
 
     @Override
     public void updateUser(UpdatePwdDTO dto) {
-        UserEntity userEntity = this.getById(dto.getUserId());
+        UserEntity userEntity = this.getOne(
+                new LambdaQueryWrapper<UserEntity>().eq(UserEntity::getUsername, dto.getUsername())
+        );
         if (userEntity == null) {
             throw new BusinessException(ResultCode.NOT_FOUND, "用户不存在");
         }
