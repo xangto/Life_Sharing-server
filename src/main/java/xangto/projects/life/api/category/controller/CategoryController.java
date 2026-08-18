@@ -8,11 +8,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.service.CategoryService;
-import xangto.projects.life.api.category.vo.CategoryVO;
+import xangto.projects.life.common.OptionVO;
 import xangto.projects.life.common.PageDTO;
-import xangto.projects.life.common.PageVO;
 import xangto.projects.life.common.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "文章分类管理")
 @Validated
@@ -24,8 +27,13 @@ public class CategoryController {
 
     @Operation(summary = "文章分类列表")
     @GetMapping("/list")
-    public Result<PageVO<CategoryVO>> listCategory(@Valid PageDTO dto) {
-        PageVO<CategoryVO> list = categoryService.getCategoryList(dto);
-        return Result.success(list);
+    public Result<List<OptionVO>> listCategory() {
+        List<CategoryEntity> entityList = categoryService.list();
+        List<OptionVO> optionVOList = new ArrayList<>();
+        entityList.forEach(e -> {
+            OptionVO optionVO = new OptionVO(e.getName(), e.getId().toString());
+            optionVOList.add(optionVO);
+        });
+        return Result.success(optionVOList);
     }
 }

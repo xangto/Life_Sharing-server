@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import xangto.projects.life.api.blog.converter.BlogConverter;
 import xangto.projects.life.api.blog.dto.*;
-import xangto.projects.life.api.blog.entity.BlogEntity;
 import xangto.projects.life.api.blog.service.BlogService;
+import xangto.projects.life.api.blog.vo.BlogInfoVO;
 import xangto.projects.life.api.blog.vo.BlogVO;
 import xangto.projects.life.common.PageVO;
 import xangto.projects.life.common.Result;
@@ -51,16 +50,10 @@ public class BlogAdminController {
     }
 
     @Operation(summary = "获取文章详情")
-    @PostMapping("/{id}")
-    public Result<BlogVO> getBlogById(@PathVariable Long id) {
-        BlogEntity entity = blogService.getById(id);
-        if (entity == null) {
-            return Result.error("查询数据错误");
-        } else {
-            BlogVO vo = BlogConverter.INSTANCE.toVO(entity);
-            vo.setContent(entity.getContent());
-            return Result.success(vo);
-        }
+    @GetMapping("/{id}")
+    public Result<BlogInfoVO> getBlogById(@PathVariable Long id) {
+        BlogInfoVO vo = blogService.getBlogInfo(id);
+        return Result.success(vo);
     }
 
     @Operation(summary = "更新文章")

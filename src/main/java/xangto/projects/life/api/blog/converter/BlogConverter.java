@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 import xangto.projects.life.api.blog.dto.BlogCreateDTO;
 import xangto.projects.life.api.blog.dto.BlogUpdateDTO;
 import xangto.projects.life.api.blog.entity.BlogEntity;
+import xangto.projects.life.api.blog.vo.BlogInfoVO;
 import xangto.projects.life.api.blog.vo.BlogVO;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public interface BlogConverter {
     @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "content", ignore = true)
     BlogVO toVO(BlogEntity entity);
+
+    @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    BlogInfoVO toInfoVO(BlogEntity entity);
 
     List<BlogVO> toVOList(List<BlogEntity> entities);
 }

@@ -12,14 +12,17 @@ import xangto.projects.life.api.blog.dto.BlogCreateDTO;
 import xangto.projects.life.api.blog.dto.BlogListDTO;
 import xangto.projects.life.api.blog.dto.BlogUpdateDTO;
 import xangto.projects.life.api.blog.entity.BlogEntity;
+import xangto.projects.life.api.blog.entity.BlogTagEntity;
 import xangto.projects.life.api.blog.mapper.BlogMapper;
 import xangto.projects.life.api.blog.service.BlogService;
+import xangto.projects.life.api.blog.vo.BlogInfoVO;
 import xangto.projects.life.api.blog.vo.BlogVO;
 import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.mapper.CategoryMapper;
 import xangto.projects.life.api.tag.mapper.TagMapper;
 import xangto.projects.life.common.BusinessException;
 import xangto.projects.life.common.PageVO;
+import xangto.projects.life.common.Result;
 import xangto.projects.life.common.ResultCode;
 
 import java.util.Arrays;
@@ -45,7 +48,7 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
     public PageVO<BlogVO> getBlogList(BlogListDTO dto) {
         LambdaQueryWrapper<BlogEntity> wrapper = new LambdaQueryWrapper<BlogEntity>()
                 .eq(dto.getCategoryId() != null, BlogEntity::getCategoryId, dto.getCategoryId())
-                .eq(dto.getTitle() != null, BlogEntity::getTitle, dto.getTitle())
+                .like(dto.getTitle() != null, BlogEntity::getTitle, dto.getTitle())
                 .orderByDesc(BlogEntity::getIsPublished)
                 .orderByDesc(BlogEntity::getIsTop)
                 .orderByDesc(BlogEntity::getCreateTime);
@@ -102,6 +105,21 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
     @Override
     public boolean deleteBlog(Long id) {
         return this.removeById(id);
+    }
+
+    @Override
+    public BlogInfoVO getBlogInfo(Long id) {
+        BlogEntity entity = this.getById(id);
+        if (entity == null) {
+            throw new BusinessException(ResultCode.ERROR, "查询数据错误");
+        } else {
+            BlogInfoVO vo = BlogConverter.INSTANCE.toInfoVO(entity);
+            List<BlogTagEntity> tagsByBlogId = blogMapper.getTagsByBlogId(id);
+            List<String> tagIdList = tagsByBlogId.stream().map(e -> e.getTagId().toString()).toList();
+            vo.setTags(tagIdList);
+
+            return vo;
+        }
     }
 
     @Override
