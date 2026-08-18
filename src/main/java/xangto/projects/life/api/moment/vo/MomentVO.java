@@ -13,5 +13,5 @@ public class MomentVO {
     private String content;
     private Integer likes;
     private Boolean isPublished;
-    private LocalDateTime createTime;
+    private String createTime;
 }

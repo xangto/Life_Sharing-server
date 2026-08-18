@@ -12,6 +12,7 @@ import xangto.projects.life.api.moment.vo.MomentVO;
 import xangto.projects.life.common.PageDTO;
 import xangto.projects.life.common.PageVO;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -32,13 +33,15 @@ public class MomentServiceImpl extends CrudRepository<MomentMapper, MomentEntity
     public PageVO<MomentVO> getMomentList(PageDTO dto) {
         Page<MomentEntity> page = this.page(dto.toPage());
         List<MomentEntity> list = page.getRecords();
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<MomentVO> voList = list.stream().map(e -> {
             MomentVO vo = new MomentVO();
             vo.setId(e.getId());
             vo.setContent(e.getContent());
             vo.setLikes(e.getLikes());
             vo.setIsPublished(e.getIsPublished());
-            vo.setCreateTime(e.getCreateTime());
+            String formatTime = e.getCreateTime().format(pattern);
+            vo.setCreateTime(formatTime);
             return vo;
         }).toList();
         return PageVO.from(page, voList);
