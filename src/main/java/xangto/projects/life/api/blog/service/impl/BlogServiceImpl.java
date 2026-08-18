@@ -17,12 +17,12 @@ import xangto.projects.life.api.blog.mapper.BlogMapper;
 import xangto.projects.life.api.blog.service.BlogService;
 import xangto.projects.life.api.blog.vo.BlogInfoVO;
 import xangto.projects.life.api.blog.vo.BlogVO;
+import xangto.projects.life.api.blog_tag.mapper.BlogTagMapper;
 import xangto.projects.life.api.category.entity.CategoryEntity;
 import xangto.projects.life.api.category.mapper.CategoryMapper;
 import xangto.projects.life.api.tag.mapper.TagMapper;
 import xangto.projects.life.common.BusinessException;
 import xangto.projects.life.common.PageVO;
-import xangto.projects.life.common.Result;
 import xangto.projects.life.common.ResultCode;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
     /**
      * 博客 Mapper：用于中间表 blog_tag 的自定义 SQL
      */
-    private final BlogMapper blogMapper;
+    private final BlogTagMapper blogTagMapper;
 
     @Override
     public PageVO<BlogVO> getBlogList(BlogListDTO dto) {
@@ -93,7 +93,7 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
                 throw new BusinessException(ResultCode.NOT_FOUND, "标签id不存在");
             }
             for (Long tagId : tagIds) {
-                int i = blogMapper.saveBlogTag(entity.getId(), tagId);
+                int i = blogTagMapper.saveBlogTag(entity.getId(), tagId);
                 if (i != 1) {
                     throw new BusinessException(ResultCode.INTERNAL_ERROR);
                 }
@@ -114,7 +114,7 @@ public class BlogServiceImpl extends CrudRepository<BlogMapper, BlogEntity> impl
             throw new BusinessException(ResultCode.ERROR, "查询数据错误");
         } else {
             BlogInfoVO vo = BlogConverter.INSTANCE.toInfoVO(entity);
-            List<BlogTagEntity> tagsByBlogId = blogMapper.getTagsByBlogId(id);
+            List<BlogTagEntity> tagsByBlogId = blogTagMapper.getTagsByBlogId(id);
             List<String> tagIdList = tagsByBlogId.stream().map(e -> e.getTagId().toString()).toList();
             vo.setTags(tagIdList);
 
