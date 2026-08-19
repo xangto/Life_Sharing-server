@@ -3,7 +3,6 @@ package xangto.projects.life.common;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -16,7 +15,9 @@ public class PageDTO {
     @Min(1)
     private Long pageSize = 10L;
 
-    /** 转为 MyBatis-Plus 分页对象 */
+    /**
+     * 转为 MyBatis-Plus 分页对象
+     */
     public <T> Page<T> toPage() {
         return new Page<>(pageNum, pageSize);
     }
