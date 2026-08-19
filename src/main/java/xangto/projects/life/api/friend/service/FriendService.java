@@ -16,4 +16,6 @@ public interface FriendService extends IRepository<FriendEntity> {
     boolean deleteFriend(Long id);
 
     boolean updateFriendPublish(FriendPublishDTO dto);
+
+    boolean updateFriendViews(Long id);
 }

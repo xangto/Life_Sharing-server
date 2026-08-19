@@ -53,4 +53,14 @@ public class FriendServiceImpl extends CrudRepository<FriendMapper, FriendEntity
                         .eq(FriendEntity::getId, dto.getId())
         );
     }
+
+    @Override
+    public boolean updateFriendViews(Long id) {
+        return this.update(
+                new LambdaUpdateWrapper<FriendEntity>()
+                        .setSql("views = views + 1")
+                        .eq(FriendEntity::getIsPublished,1)
+                        .eq(FriendEntity::getId, id)
+        );
+    }
 }

@@ -32,4 +32,11 @@ public class FriendController {
         boolean b = friendService.addFriend(dto);
         return b ? Result.success() : Result.error();
     }
+    
+    @Operation(summary = "友链浏览量+1")
+    @PutMapping("/view/{id}")
+    public Result<?> addFriendView(@PathVariable Long id) {
+        boolean b = friendService.updateFriendViews(id);
+        return b ? Result.success() : Result.error();
+    }
 }
