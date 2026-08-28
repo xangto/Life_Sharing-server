@@ -33,3 +33,6 @@ build/
 
 ### ai ###
 CLAUDE.md
+
+### prod ###
+application-prod.yaml
