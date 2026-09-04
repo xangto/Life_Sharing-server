@@ -14,7 +14,11 @@ spring:
             password: xangto123
             driver-class-name: com.mysql.cj.jdbc.Driver
             url: jdbc:mysql://localhost:3306/life-service?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-
+aliyun:
+    oss:
+        endpoint: oss-cn-wuhan-lr.aliyuncs.com
+        bucket-name: xangto1
+        region: cn-wuhan-lr
 jwt:
     issure: jQiaos
     screct: xangto-jianqiao-best
